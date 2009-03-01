@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twilight", "Twilight.csproj", "{156A0EB1-E2FB-469A-A64B-1BEE7B3F9E61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{156A0EB1-E2FB-469A-A64B-1BEE7B3F9E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156A0EB1-E2FB-469A-A64B-1BEE7B3F9E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156A0EB1-E2FB-469A-A64B-1BEE7B3F9E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156A0EB1-E2FB-469A-A64B-1BEE7B3F9E61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
