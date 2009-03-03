@@ -63,7 +63,7 @@ namespace Twilight
                 }
             }
 
-            Application.Exit();
+            // Application.Exit();
         }
 
         private void checkAllLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
