@@ -22,23 +22,82 @@ namespace Twilight
 
         private void LoadWindows()
         {
+            // Get a list of all windows and load the treeview with it.
+
             appsTreeView.Nodes.Clear();
             List<WindowInfo> windows = Windows.GetWindows();
             foreach (WindowInfo info in windows)
             {
+                // Group windows of the same class.
+
                 TreeNode[] nodes = appsTreeView.Nodes.Find(info.ClassName, false);
-                TreeNode windowNode;
+                TreeNode classNode;
                 if (nodes.Length == 1)
                 {
-                    windowNode = nodes[0].Nodes.Add(info.Caption);
+                    classNode = nodes[0];
                 }
                 else
                 {
-                    TreeNode node = appsTreeView.Nodes.Add(info.ClassName, info.ClassName);
-                    windowNode = node.Nodes.Add(info.Caption);
-                    node.Expand();
+                    classNode = appsTreeView.Nodes.Add(info.ClassName, info.ClassName);
                 }
-                windowNode.Tag = info.Handle;
+
+                classNode.Nodes.Add(info.Handle.ToString(), info.Caption).Tag = info.Handle;
+                classNode.Expand();
+            }
+        }
+
+        private void RefreshWindows()
+        {
+            // Non-destructively refresh the treeview. We can't simply clear it and reload it
+            // because then we'd lose the state of the checkboxes. Plus doing that causes a flicker.
+
+            // First, get a list of all windows and make sure that all of them exist in the treeview.
+
+            List<WindowInfo> windows = Windows.GetWindows();
+            foreach (WindowInfo info in windows)
+            {
+                TreeNode[] nodes = appsTreeView.Nodes.Find(info.ClassName, false);
+                TreeNode classNode = null;
+                if (nodes.Length == 1)
+                {
+                    if (nodes[0].Nodes.Find(info.Handle.ToString(), false).Length == 0)
+                    {
+                        classNode = nodes[0];
+                    }
+                }
+                else
+                {
+                    classNode = appsTreeView.Nodes.Add(info.ClassName, info.ClassName);
+                }
+
+                if (classNode != null)
+                {
+                    classNode.Nodes.Add(info.Handle.ToString(), info.Caption).Tag = info.Handle;
+                    classNode.Expand();
+                }
+            }
+
+            // Next, make sure that all windows in the treeview still exist.
+            // No foreach'ing here because we're deleting items from the collection we're
+            // iterating over.
+
+            for (int i = appsTreeView.Nodes.Count - 1; i >= 0; i--)
+            {
+                TreeNode classNode = appsTreeView.Nodes[i];
+                for (int j = classNode.Nodes.Count - 1; j >= 0; j--)
+                {
+                    TreeNode windowNode = classNode.Nodes[j];
+                    if (!Windows.WindowExists((IntPtr)windowNode.Tag))
+                    {
+                        classNode.Nodes.RemoveAt(j);
+                    }
+                }
+
+                // Remove the class name node too if there are no more windows of this class.
+                if (classNode.Nodes.Count == 0)
+                {
+                    appsTreeView.Nodes.RemoveAt(i);
+                }
             }
         }
 
@@ -62,29 +121,29 @@ namespace Twilight
                     }
                 }
             }
+        }
 
-            // Application.Exit();
+        private void CheckAll(bool check)
+        {
+            foreach (TreeNode classNode in appsTreeView.Nodes)
+            {
+                classNode.Checked = check;
+            }
         }
 
         private void checkAllLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            foreach (TreeNode classNode in appsTreeView.Nodes)
-            {
-                classNode.Checked = true;
-            }
+            CheckAll(true);
         }
 
         private void uncheckAllLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            foreach (TreeNode classNode in appsTreeView.Nodes)
-            {
-                classNode.Checked = false;
-            }
+            CheckAll(false);
         }
 
-        private void refreshLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void refreshTimer_Tick(object sender, EventArgs e)
         {
-            LoadWindows();
+            RefreshWindows();
         }
     }
 }

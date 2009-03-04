@@ -28,12 +28,13 @@ namespace Twilight
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.appsTreeView = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.closeButton = new System.Windows.Forms.Button();
             this.checkAllLinkLabel = new System.Windows.Forms.LinkLabel();
             this.uncheckAllLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.refreshLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // appsTreeView
@@ -93,24 +94,17 @@ namespace Twilight
             this.uncheckAllLinkLabel.Text = "Uncheck All";
             this.uncheckAllLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.uncheckAllLinkLabel_LinkClicked);
             // 
-            // refreshLinkLabel
+            // refreshTimer
             // 
-            this.refreshLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.refreshLinkLabel.AutoSize = true;
-            this.refreshLinkLabel.Location = new System.Drawing.Point(427, 9);
-            this.refreshLinkLabel.Name = "refreshLinkLabel";
-            this.refreshLinkLabel.Size = new System.Drawing.Size(45, 13);
-            this.refreshLinkLabel.TabIndex = 5;
-            this.refreshLinkLabel.TabStop = true;
-            this.refreshLinkLabel.Text = "Refresh";
-            this.refreshLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.refreshLinkLabel_LinkClicked);
+            this.refreshTimer.Enabled = true;
+            this.refreshTimer.Interval = 200;
+            this.refreshTimer.Tick += new System.EventHandler(this.refreshTimer_Tick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 378);
-            this.Controls.Add(this.refreshLinkLabel);
             this.Controls.Add(this.uncheckAllLinkLabel);
             this.Controls.Add(this.checkAllLinkLabel);
             this.Controls.Add(this.closeButton);
@@ -133,6 +127,6 @@ namespace Twilight
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.LinkLabel checkAllLinkLabel;
         private System.Windows.Forms.LinkLabel uncheckAllLinkLabel;
-        private System.Windows.Forms.LinkLabel refreshLinkLabel;
+        private System.Windows.Forms.Timer refreshTimer;
     }
 }

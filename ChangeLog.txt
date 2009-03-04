@@ -1,0 +1,11 @@
+1.0.2
+- Added better filtering for desktop windows. Now only windows with a title bar are listed.
+- Added a timed automatic refresh of the list. Hard-coded to 200ms.
+- Removed the manual refresh linkbutton.
+- Some minor refactoring.
+
+1.0.1
+- Removed automatic exit.
+
+1.0.0
+- Initial release.

@@ -22,9 +22,20 @@ namespace Twilight
         [DllImport("user32.dll")]
         static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
-        [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        static readonly int WS_CAPTION = 0x00C00000;
+        static readonly uint WM_CLOSE = 0x0010;
+        static readonly int GWL_STYLE =(-16);
 
         static List<WindowInfo> windowList;
 
@@ -35,7 +46,14 @@ namespace Twilight
                 return true;
             }
 
+            // Can't see it, skip it.
             if (!IsWindowVisible(hWnd))
+            {
+                return true;
+            }
+
+            // No title bar, skip it.
+            if ((GetWindowLong(hWnd, GWL_STYLE) & WS_CAPTION) == 0)
             {
                 return true;
             }
@@ -46,6 +64,7 @@ namespace Twilight
             length = GetWindowText(hWnd, caption, caption.Capacity);
             caption.Length = length;
 
+            // Empty title, skip it.
             if (caption.ToString().Trim().Length == 0)
             {
                 return true;
@@ -74,7 +93,12 @@ namespace Twilight
 
         public static void CloseWindow(IntPtr hWnd)
         {
-            PostMessage(hWnd, 0x0010 /* WM_CLOSE */, IntPtr.Zero, IntPtr.Zero);
+            PostMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
+
+        public static bool WindowExists(IntPtr hWnd)
+        {
+            return IsWindow(hWnd);
         }
     }
 }
