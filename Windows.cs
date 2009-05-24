@@ -1,7 +1,8 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Twilight
 {
@@ -32,6 +33,9 @@ namespace Twilight
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
         static readonly int WS_CAPTION = 0x00C00000;
         static readonly uint WM_CLOSE = 0x0010;
@@ -74,10 +78,24 @@ namespace Twilight
             length = GetClassName(hWnd, className, className.Capacity);
             className.Length = length;
 
+            int processId;
+            GetWindowThreadProcessId(hWnd, out processId);
+            Process process = Process.GetProcessById(processId);
+
             WindowInfo info = new WindowInfo();
             info.Handle = hWnd;
             info.Caption = caption.ToString();
             info.ClassName = className.ToString();
+            info.ModuleFileName = process.MainModule.FileName;
+            info.Description = process.MainModule.FileVersionInfo.FileDescription;
+            if (String.IsNullOrEmpty(info.Description))
+            {
+                info.Description = process.MainModule.FileVersionInfo.ProductName;
+            }
+            if (String.IsNullOrEmpty(info.Description))
+            {
+                info.Description = process.MainModule.ModuleName;
+            }
 
             windowList.Add(info);
 

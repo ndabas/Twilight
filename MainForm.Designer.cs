@@ -96,7 +96,6 @@ namespace Twilight
             // 
             // refreshTimer
             // 
-            this.refreshTimer.Enabled = true;
             this.refreshTimer.Interval = 200;
             this.refreshTimer.Tick += new System.EventHandler(this.refreshTimer_Tick);
             // 

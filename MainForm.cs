@@ -30,7 +30,7 @@ namespace Twilight
             {
                 // Group windows of the same class.
 
-                TreeNode[] nodes = appsTreeView.Nodes.Find(info.ClassName, false);
+                TreeNode[] nodes = appsTreeView.Nodes.Find(info.ModuleFileName, false);
                 TreeNode classNode;
                 if (nodes.Length == 1)
                 {
@@ -38,12 +38,15 @@ namespace Twilight
                 }
                 else
                 {
-                    classNode = appsTreeView.Nodes.Add(info.ClassName, info.ClassName);
+                    classNode = appsTreeView.Nodes.Add(info.ModuleFileName, info.Description);
                 }
 
                 classNode.Nodes.Add(info.Handle.ToString(), info.Caption).Tag = info.Handle;
                 classNode.Expand();
             }
+
+            // Start the refresh timer
+            refreshTimer.Enabled = true;
         }
 
         private void RefreshWindows()
@@ -56,7 +59,7 @@ namespace Twilight
             List<WindowInfo> windows = Windows.GetWindows();
             foreach (WindowInfo info in windows)
             {
-                TreeNode[] nodes = appsTreeView.Nodes.Find(info.ClassName, false);
+                TreeNode[] nodes = appsTreeView.Nodes.Find(info.ModuleFileName, false);
                 TreeNode classNode = null;
                 if (nodes.Length == 1)
                 {
@@ -67,7 +70,7 @@ namespace Twilight
                 }
                 else
                 {
-                    classNode = appsTreeView.Nodes.Add(info.ClassName, info.ClassName);
+                    classNode = appsTreeView.Nodes.Add(info.ModuleFileName, info.Description);
                 }
 
                 if (classNode != null)
@@ -143,7 +146,12 @@ namespace Twilight
 
         private void refreshTimer_Tick(object sender, EventArgs e)
         {
+            // Disable the timer once we get a tick event to prevent re-entrancy. We'll enable it
+            // once we're done.
+            
+            refreshTimer.Enabled = false;
             RefreshWindows();
+            refreshTimer.Enabled = true;
         }
     }
 }

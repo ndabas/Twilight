@@ -1,3 +1,7 @@
+1.0.3
+- The tree now shows sensible app descriptions instead of internal class names.
+- Minor tweaks to prevent re-entrancy in the timed refresh.
+
 1.0.2
 - Added better filtering for desktop windows. Now only windows with a title bar are listed.
 - Added a timed automatic refresh of the list. Hard-coded to 200ms.
